@@ -58,7 +58,7 @@ class TheReceiver : BroadcastReceiver() {
             Log.e("#######","triggerCounter = " + triggerCounter)
 
             val smsManager = SmsManager.getDefault() as SmsManager
-            smsManager.sendTextMessage("0724271370", null, "I have pressed my power button at least 4 times, I could be in trouble", null, null)
+            smsManager.sendTextMessage("0721425662", null, "I have pressed my power button at least 4 times, I could be in trouble", null, null)
 
             triggerInProgress = false
             triggerCounter = 0
