@@ -16,9 +16,7 @@ class TheReceiver : BroadcastReceiver() {
        var wasScreenOn = true
         private var lastTriggerTime:Long = 0
         private val ONE_MILLI = 1000
-        protected val ONE_SEC = (1 * ONE_MILLI).toLong()
         protected val TWO_SEC = (2 * ONE_MILLI).toLong()
-        protected val THREE_SEC = (3 * ONE_MILLI).toLong()
         protected val TRIGGER_THRESHOLD = 3
         protected var triggerInProgress = false
         protected var triggerCounter = 1
@@ -28,6 +26,11 @@ class TheReceiver : BroadcastReceiver() {
         Log.e("#####","onReceive")
         checkAndSendSMS(context.applicationContext)
 
+        if(intent.action.equals(Intent.ACTION_BOOT_COMPLETED)){
+            val service = Intent(context, SmsService::class.java)
+            context.startService(service)
+            checkAndSendSMS(context.applicationContext)
+        }
         if (intent.action.equals(Intent.ACTION_SCREEN_ON)){
             wasScreenOn = true
             Log.e("#######","wasScreenOn" + wasScreenOn)
