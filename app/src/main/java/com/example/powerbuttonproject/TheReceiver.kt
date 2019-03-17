@@ -8,12 +8,12 @@ import android.support.v4.content.ContextCompat.startActivity
 import android.telephony.SmsManager
 import android.util.Log
 import android.support.v4.content.ContextCompat.startActivity
-
+import android.widget.Toast
 
 
 class TheReceiver : BroadcastReceiver() {
     companion object {
-       var wasScreenOn = true
+     //  var wasScreenOn = true
         private var lastTriggerTime:Long = 0
         private val ONE_MILLI = 1000
         protected val TWO_SEC = (2 * ONE_MILLI).toLong()
@@ -24,31 +24,25 @@ class TheReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.e("#####","onReceive")
-        checkAndSendSMS(context.applicationContext)
+        checkAndSendSMS()
 
         if(intent.action.equals(Intent.ACTION_BOOT_COMPLETED)){
             val service = Intent(context, SmsService::class.java)
+            service.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startService(service)
-            checkAndSendSMS(context.applicationContext)
-        }
-        if (intent.action.equals(Intent.ACTION_SCREEN_ON)){
-            wasScreenOn = true
-            Log.e("#######","wasScreenOn" + wasScreenOn)
-        }
-        else if (intent.action.equals(Intent.ACTION_SCREEN_OFF)) {
-            wasScreenOn = false
-            Log.e("#######","wasScreenOn" + wasScreenOn)
+            Toast.makeText(context,"Sms Service Restarted After Reboot!",Toast.LENGTH_LONG).show()
+            checkAndSendSMS()
         }
       }
 
 
-    private fun checkAndSendSMS(context:Context) {
+
+    private fun checkAndSendSMS() {
         if (((System.currentTimeMillis() - lastTriggerTime) <= TWO_SEC || (triggerCounter == 0)))
         {
             triggerCounter++
             lastTriggerTime = System.currentTimeMillis()
-            Log.e("#######","triggerCounter = " + triggerCounter)
-
+            Log.e("#######", "triggerCounter = " + triggerCounter)
         }
         else
         {
@@ -62,7 +56,7 @@ class TheReceiver : BroadcastReceiver() {
 
             val smsManager = SmsManager.getDefault() as SmsManager
             smsManager.sendTextMessage("0721425662", null, "I have pressed my power button at least 4 times, I could be in trouble", null, null)
-
+            //0721425662
             triggerInProgress = false
             triggerCounter = 0
 
